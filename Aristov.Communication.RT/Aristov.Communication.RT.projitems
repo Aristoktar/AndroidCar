@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>b11260ea-d679-47a8-98c1-3d7e8934e991</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Aristov.Communication.RT</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Client.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MediaType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NewFrameEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Packet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PacketType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Session.cs" />
+  </ItemGroup>
+</Project>
