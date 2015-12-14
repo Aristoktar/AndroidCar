@@ -19,11 +19,17 @@ using Timer = System.Timers.Timer;
 namespace TcpCatcher {
 	public partial class Form1 : Form
 	{
+
+		Client _client;
 		public Form1(){
 		
 			InitializeComponent();
-			var t= new Server();
-			t.Start();
+			_client = new Client(textBox1.Text, 123);
+			_client.NewFrameEventHandler += _client_NewFrameEventHandler;
+		}
+
+		void _client_NewFrameEventHandler ( object sender , NewFrameEventArgs e ) {
+			Console.WriteLine("Recived {0} with hash {1},Length: {2}",e.Type,e.FrameBytes.GetHashCode(),e.FrameBytes.Length);
 		}
 
 		Thread thread;

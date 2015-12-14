@@ -11,5 +11,5 @@ namespace Aristov.Communication.RT
 	    public MediaType Type { get; set; }
     }
 
-	public delegate void  NewFrameEvent(object sender, NewFrameEvent e);
+	public delegate void NewFrameEvent ( object sender , NewFrameEventArgs e );
 }

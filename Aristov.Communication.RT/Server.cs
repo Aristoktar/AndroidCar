@@ -16,6 +16,7 @@ namespace Aristov.Communication.RT
 	    Thread _clientThread;
 	    ConcurrentBag<Session> _clientsSessions;
 	    ConcurrentBag<TcpClient> _clients; 
+		
 		private int _maxClients = 2;
 	    public int MaxClients {
 		    get {return _maxClients; }
@@ -64,9 +65,16 @@ namespace Aristov.Communication.RT
 
 	    public void NewFrame(byte[] frame)
 	    {
-		    foreach (var session in _clientsSessions)
+		    try
 		    {
-			    session.AddNewFrame(frame);
+
+			    foreach (var session in _clientsSessions)
+			    {
+				    session.AddNewFrame(frame);
+			    }
+		    }
+		    catch (TimeoutException)
+		    {
 		    }
 	    }
     }
