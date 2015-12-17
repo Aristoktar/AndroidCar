@@ -10,7 +10,7 @@ namespace Aristov.Communication.RT
     {
 	    private TcpClient _client;
 	    public Guid Id { get; private set; }
-	    public TimeSpan TimeOut  = new TimeSpan();
+	    public TimeSpan TimeOut  = new TimeSpan(0,0,40);
 
 
 	    public Session ( TcpClient client )

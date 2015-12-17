@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Timers;
+
 
 namespace Aristov.Communication.RT
 {
@@ -11,6 +13,8 @@ namespace Aristov.Communication.RT
 	    ConcurrentQueue<byte[]> images { get; set; }
 
 		public event NewFrameEvent NewFrameEventHandler;
+		Timer _timer = new Timer();
+	    TcpClient _client;
 
 		public bool Stoped {
 			get;
@@ -19,10 +23,16 @@ namespace Aristov.Communication.RT
 
 	    public Client(string host, int port)
 	    {
-		    TcpClient client = new TcpClient(host, port);
+		    _client = new TcpClient(host, port);
 		    Stoped = false;
-			EnqueueImage(client.GetStream());
+			_timer.Elapsed += _timer_Elapsed;
+			_timer.Start();
+			
 	    }
+
+		void _timer_Elapsed ( object sender , ElapsedEventArgs e ) {
+			EnqueueImage ( _client.GetStream () );
+		}
 
 	    public void Disconnect()
 	    {
@@ -34,7 +44,7 @@ namespace Aristov.Communication.RT
 	    {
 		    int suzeofInt = sizeof (Int32);
 		    var buffer = new byte[suzeofInt];
-
+			stream.WriteByte(new byte());
 		    stream.Read(buffer, 0, suzeofInt);
 		    PacketType packetType = (PacketType)BitConverter.ToInt32(buffer, 0);
 			stream.Read ( buffer ,0 , suzeofInt );
@@ -47,7 +57,7 @@ namespace Aristov.Communication.RT
 				NewFrameEventHandler(this, new NewFrameEventArgs()
 				{
 					FrameBytes = data,
-					Type = MediaType.Jpeg //Hardcode!!=) for a while
+					Type = MediaType.Jpeg //Hardcode!=) for a while
 
 				});
 			}

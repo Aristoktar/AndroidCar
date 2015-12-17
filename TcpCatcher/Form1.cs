@@ -24,12 +24,23 @@ namespace TcpCatcher {
 		public Form1(){
 		
 			InitializeComponent();
-			_client = new Client(textBox1.Text, 123);
-			_client.NewFrameEventHandler += _client_NewFrameEventHandler;
+			
 		}
 
+		int countF = 0;
 		void _client_NewFrameEventHandler ( object sender , NewFrameEventArgs e ) {
+			//countF++;
 			Console.WriteLine("Recived {0} with hash {1},Length: {2}",e.Type,e.FrameBytes.GetHashCode(),e.FrameBytes.Length);
+			string file = Path.Combine(Environment.CurrentDirectory, "photos",string.Format("img{0}.jpeg",countF));
+			var img = Image.FromStream(new MemoryStream(e.FrameBytes));
+			
+			
+			setPic(img);
+			//var f = new BinaryWriter(new FileStream(file, FileMode.Create));
+			//f.Write(e.FrameBytes);
+			//f.Close();
+			//f.Dispose();
+
 		}
 
 		Thread thread;
@@ -39,21 +50,23 @@ namespace TcpCatcher {
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			thread = new Thread(listen);
-			thread.Start();
-			timer = new Timer(100);
-			ConcurrentQueue<Image> _imagesBag = new ConcurrentQueue<Image> ();
-			timer.Elapsed += (o, args) =>
-			{
-				if (Image!=null)
-				{
-					//var image = _imagesBag.Last ();
-					//pictureBox1.Image = Image;
-					//SetText( DateTime.Now.TimeOfDay+"|"+Image.GetHashCode()+ Environment.NewLine);
-				}
+			_client = new Client ( textBox1.Text , 8012 );
+			_client.NewFrameEventHandler += _client_NewFrameEventHandler;
+			//thread = new Thread(listen);
+			//thread.Start();
+			//timer = new Timer(100);
+			//ConcurrentQueue<Image> _imagesBag = new ConcurrentQueue<Image> ();
+			//timer.Elapsed += (o, args) =>
+			//{
+			//	if (Image!=null)
+			//	{
+			//		//var image = _imagesBag.Last ();
+			//		//pictureBox1.Image = Image;
+			//		//SetText( DateTime.Now.TimeOfDay+"|"+Image.GetHashCode()+ Environment.NewLine);
+			//	}
 				
-			};
-			timer.Start();
+			//};
+			//timer.Start();
 
 		}
 		
@@ -94,7 +107,6 @@ namespace TcpCatcher {
 			}
 			else
 			{
-				SetText("image:"+frames+Environment.NewLine);
 				pictureBox1.Image = img;
 
 			}

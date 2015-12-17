@@ -14,7 +14,7 @@ namespace Aristov.Communication.RT
 	    Socket _socket;
 	    TcpListener _listener;// = new TcpListener ( IPAddress.Parse ( this.textBox1.Text ) , 123 );
 	    Thread _clientThread;
-	    ConcurrentBag<Session> _clientsSessions;
+	    ConcurrentBag<Session> _clientsSessions = new ConcurrentBag<Session>();
 	    ConcurrentBag<TcpClient> _clients; 
 		
 		private int _maxClients = 2;
@@ -23,32 +23,40 @@ namespace Aristov.Communication.RT
 		    set { _maxClients = value; }
 	    }
 
-	    public Server(string endpoint = "localhost",int port=123)
+	    public Server(string endpoint = "localhost", int port=8012)
 	    {
-			_listener = new TcpListener ( IPAddress.Parse ( endpoint ) , port );
+		    var end = IPAddress.Parse(endpoint);
+			_listener = new TcpListener ( end , port );
 			
 			//_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream,  ProtocolType.Tcp);
 			//_socket.Bind(new IPEndPoint(IPAddress.Parse(endpoint), 554));
 			//_clientThread = new Thread(AcceptLoop);
 	    }
-		
+
+	    Thread _acceptThread;
 	    public void Start()
 	    {
 			_listener.Start ();
-			AcceptCircle ( _listener );
+			_acceptThread = new Thread(AcceptCircle);
+			_acceptThread.Start(_listener);
+			
 			//return new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 	    }
-		void AcceptCircle ( TcpListener listener ) {
-			while (_clients.Count < MaxClients)
+		void AcceptCircle ( object listenerObj )
+		{
+			var listener = (TcpListener) listenerObj;
+			while ( _clientsSessions.Count < MaxClients )
 			{
 
-				listener.BeginAcceptTcpClient(ar =>
+				var iar=listener.BeginAcceptTcpClient(ar =>
 				{
 					Thread thread = new Thread (AcceptClient);
 					var listenerTcp = (TcpListener) ar.AsyncState;
 					var client = listenerTcp.EndAcceptTcpClient(ar);
 					thread.Start ( client );
+					
 				}, listener);
+				iar.AsyncWaitHandle.WaitOne();
 			}
 		}
 
@@ -67,10 +75,15 @@ namespace Aristov.Communication.RT
 	    {
 		    try
 		    {
-
+				
 			    foreach (var session in _clientsSessions)
 			    {
-				    session.AddNewFrame(frame);
+				    ThreadPool.QueueUserWorkItem((state) =>
+				    {
+					    var parameters = state as object[];
+					    (parameters[0] as Session).AddNewFrame(parameters[1] as byte[]);
+				    },new object[]{session,frame});
+				  //  session.AddNewFrame(frame);
 			    }
 		    }
 		    catch (TimeoutException)

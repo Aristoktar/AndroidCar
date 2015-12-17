@@ -15,7 +15,7 @@ namespace Aristov.Communication.RT
 
 	   public Packet(byte[] bytes,bool isPacketIncomin)
 	   {
-		   if (isPacketIncomin)
+		   if (!isPacketIncomin)
 		   {
 			   _packetType = PacketType.Image;
 			   _data = bytes;

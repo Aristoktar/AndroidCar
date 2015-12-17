@@ -33,7 +33,12 @@ namespace Android {
 		ISurfaceHolder surfaceHolder;
 		LinearLayout layout;
 		Server _server;
+		TextureView _textureView;
+		int frames = 0;
 
+		Button ButtonStart;
+		Button ButtonStop;
+		EditText TextHost;
 		protected override void OnCreate ( Bundle bundle ) {
 			base.OnCreate ( bundle );
 			SetContentView ( Resource.Layout.Main );
@@ -43,25 +48,30 @@ namespace Android {
 			surfaceView = FindViewById<SurfaceView> ( Resource.Id.surfaceCamera );
 			surfaceHolder = surfaceView.Holder;
 			surfaceHolder.AddCallback ( this );
-			Button button = FindViewById<Button> ( Resource.Id.ButtonStart );
-			var Button1 = FindViewById<Button>(Resource.Id.ButtonStop);
-			var textvhost= FindViewById<EditText>(Resource.Id.TextHost);
-			button.Click += delegate
+			ButtonStart = FindViewById<Button> ( Resource.Id.ButtonStart );
+			ButtonStop= FindViewById<Button> ( Resource.Id.ButtonStop );
+			TextHost = FindViewById<EditText> ( Resource.Id.TextHost );
+
+			ButtonStart.Click += ButtonStart_Click;
+
+			
+
+		}
+
+		void ButtonStart_Click ( object sender , EventArgs e ) {
+			try
 			{
-				return;
-			};
-			Button1.Click += Button1_Click;
-
-			_server = new Server(textvhost.Text);
-
+				_server = new Server ( TextHost.Text );
+				_server.Start ();
+			}
+			catch (Exception ex)
+			{
+				Log.Debug(LogTag, string.Format("Error: {0}",ex));
+			}
+			
 		}
 
-
-		void Button1_Click ( object sender , EventArgs e ) {
-			if(thread!=null && thread.IsAlive)
-				thread.Abort();
-		}
-		TextureView _textureView;
+		
 
 		public void SurfaceChanged(ISurfaceHolder holder, Format format, int width, int height)
 		{
@@ -78,7 +88,7 @@ namespace Android {
 				_camera.SetPreviewCallback(this);
 				_camera.StartPreview();
 
-				_server.Start ();
+				
 				//  camera.setDisplayOrientation(90);
 			}
 			catch ( Exception e )
@@ -87,28 +97,38 @@ namespace Android {
 			}
 		}
 
-		int frames = 0;
+
 		public void SurfaceDestroyed(ISurfaceHolder holder)
 		{
 		}
 
+		int rate = 15;
+		int countF = 0;
 		public void OnPreviewFrame(byte[] data, Camera camera)
 		{
 
 			try {
-				TcpClient client = new TcpClient ( "aristov.me" , 123 );
-				var stream = client.GetStream ();
-				Camera.Parameters parameters = camera.GetParameters ();
-				Rect rect = new Rect ( 0 , 0 , parameters.PreviewSize.Width , parameters.PreviewSize.Height );
-				var jpegdata = ConvertYuvToJpeg ( data , camera );
-				stream.Write ( jpegdata , 0 , jpegdata.Length );
-				Log.Info(LogTag, "New frame sent");
-
+				if (_server != null)
+				{
+					if (countF%rate==0)
+					{
+						//TcpClient client = new TcpClient ( "aristov.me" , 123 );
+						//var stream = client.GetStream ();
+						Camera.Parameters parameters = camera.GetParameters();
+						Rect rect = new Rect(0, 0, parameters.PreviewSize.Width, parameters.PreviewSize.Height);
+						var jpegdata = ConvertYuvToJpeg(data, camera);
+						//stream.Write ( jpegdata , 0 , jpegdata.Length );
+						Log.Info(LogTag, "New frame sent:hash "+jpegdata.GetHashCode());
+						_server.NewFrame(jpegdata);
+						
+					}
+					countF++;
+				}
 			}
 			catch (Exception ex)
 			{
 
-				Log.Error(LogTag, ex.ToString());
+				Log.Error(LogTag,string.Format("Error while sending frame: {0}", ex));
 			}
 
 		}
