@@ -10,6 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Client.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommunicationObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ICommunicationObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MediaType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NewFrameEvent.cs" />

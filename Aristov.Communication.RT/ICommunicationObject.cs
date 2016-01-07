@@ -4,12 +4,8 @@ using System.Text;
 
 namespace Aristov.Communication.RT
 {
-    public enum PacketType
+    public interface ICommunicationObject
     {
-		ImageRecive = 0,
-		ImageRequest =1,
-		Initail=2,
-		LengthChange=3
 
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Timers;
+using Timer = System.Timers.Timer;
 
 
 namespace Aristov.Communication.RT
@@ -12,9 +14,15 @@ namespace Aristov.Communication.RT
     {
 	    ConcurrentQueue<byte[]> images { get; set; }
 
-		public event NewFrameEvent NewFrameEventHandler;
+		public int PacketSize {
+			get;
+			set;
+		}
+
+	    public event NewFrameEvent NewFrameEventHandler;
 		Timer _timer = new Timer();
 	    TcpClient _client;
+	    Thread _receiveThread;
 
 		public bool Stoped {
 			get;
@@ -27,10 +35,21 @@ namespace Aristov.Communication.RT
 		    Stoped = false;
 			_timer.Elapsed += _timer_Elapsed;
 			_timer.Start();
-			
 	    }
 
-		void _timer_Elapsed ( object sender , ElapsedEventArgs e ) {
+	    private void Receive()
+	    {
+		    while (!Stoped)
+		    {
+			    var buffer = new byte[PacketSize];
+			    var stream = _client.GetStream();
+				stream.Write(new byte[1],0,1 );
+			    stream.Read(buffer, 0, PacketSize);
+			    long timeStamp = BitConverter.ToInt64(buffer, 0);
+		    }
+	    }
+
+	    void _timer_Elapsed ( object sender , ElapsedEventArgs e ) {
 			EnqueueImage ( _client.GetStream () );
 		}
 

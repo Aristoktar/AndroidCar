@@ -9,15 +9,46 @@ namespace Aristov.Communication.RT
 {
    public class Packet
    {
+	   public static int TypeOffset = 0;
+	   public static int TimeStampOffset = 4;
+	   public static int TokenOffset = 12;
+	   public static int DataOffset = 16;
+	  
+	   public static int DataSize = 1000;
+	   
+
+
+
 	   private static readonly int _headerLength = sizeof ( Int32 )*2;
 	   private byte[] _data;
 	   private PacketType _packetType;
+
+	   public static byte[] Create ( byte[] bytes , PacketType type, int token )
+	   {
+		   var res = new byte[DataOffset + DataSize];
+		   BitConverter.GetBytes((int) type).CopyTo(res,TypeOffset);
+		   BitConverter.GetBytes(token).CopyTo(res,TokenOffset);
+		   BitConverter.GetBytes(DateTime.Now.Ticks).CopyTo(res,TimeStampOffset);
+		   bytes.CopyTo(res,DataOffset);
+		   return res;
+	   }
+
+	   public static byte[] CreateLogon()
+	   {
+
+
+	   }
+
+	   public Packet(byte[] bytes, PacketType type)
+	   {
+
+	   }
 
 	   public Packet(byte[] bytes,bool isPacketIncomin)
 	   {
 		   if (!isPacketIncomin)
 		   {
-			   _packetType = PacketType.Image;
+			   _packetType = PacketType.ImageRecive;
 			   _data = bytes;
 		   }
 		   else

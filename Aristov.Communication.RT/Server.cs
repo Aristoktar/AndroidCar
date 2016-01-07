@@ -88,6 +88,7 @@ namespace Aristov.Communication.RT
 		    }
 		    catch (TimeoutException)
 		    {
+
 		    }
 	    }
     }
