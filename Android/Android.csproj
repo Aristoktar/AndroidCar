@@ -87,6 +87,12 @@
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aristov.Common\Aristov.Common.csproj">
+      <Project>{C170BD34-D40E-4FFA-9F29-6E4F0614C6BF}</Project>
+      <Name>Aristov.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\SharedProject2\SharedProject2.projitems" Label="Shared" Condition="Exists('..\SharedProject2\SharedProject2.projitems')" />
   <Import Project="..\Aristov.Communication.RT\Aristov.Communication.RT.projitems" Label="Shared" Condition="Exists('..\Aristov.Communication.RT\Aristov.Communication.RT.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
