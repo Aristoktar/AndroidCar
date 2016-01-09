@@ -20,14 +20,14 @@ namespace Aristov.Communication.RT
 			Id=new Guid();
 		    _token = Id.GetHashCode();
 			_client = client;
-
+			 
 		    _connectionEstablished = false;
 	    }
 
 	    public bool EstablishConnection()
 	    {
 		    _client.GetStream();
-			Packet.Create()
+			//Packet.Create()
 
 		    return _connectionEstablished;
 	    }
@@ -43,7 +43,7 @@ namespace Aristov.Communication.RT
 			//timer.Stop ();
 			//var packet = new Packet ( frameBytes , false );
 			//var senddata = packet.GetSendData ();
-			stream.w//.Write ( senddata , 0 , senddata.Length );
+			//stream.w//.Write ( senddata , 0 , senddata.Length );
 
 		    if (_connectionEstablished)
 		    {
