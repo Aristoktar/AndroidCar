@@ -30,22 +30,21 @@ namespace Aristov.Communication.RT.Queued
 
 	    public void Recive()
 	    {
-		    Dictionary<int, IFrame> frames= new Dictionary<int, IFrame>();
-		    while (true)
+		    Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>();
+		    while (_socket.Connected)
 		    {
 				byte[] buffer = new byte[_bufferSize];
 			    int bytesReceived = _socket.Receive(buffer);
 				//bytes received?
 				IPacket packet = new Packet(buffer,bytesReceived);
-			    var frame = frames[packet.Id];
-			    if (frame.TryAddPacket(packet))
-			    {
-				    if (NewFrame!=null)
-				    {
-						NewFrame ( this , new NewFrameEventArgs {Frame = frame} );
-				    }
-			    }
+			    IFrame frame;
+			    if (!frames.TryGetValue(packet.FrameId, out frame)) continue;
 
+			    if (!frame.TryAddPacket(packet)) continue;
+
+			    if ( NewFrame != null ) {
+				    NewFrame ( this , new NewFrameEventArgs {Frame = frame} );
+			    }
 		    }
 	    }
     }

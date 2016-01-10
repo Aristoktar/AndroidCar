@@ -26,8 +26,14 @@ namespace Aristov.Communication.RT.Queued {
 		public IDictionary<int, IPacket> Packets { get;private set; }
 		public bool TryAddPacket(IPacket packet)
 		{
-			//Packets[packet.FrameId].
-			return true;
+			if(Packets.ContainsKey(packet.FrameId))
+				throw new MyException{ExceptionType = MyExceptionType.PacketAlreadyContains};
+			Packets.Add(packet.FrameId, packet);
+			if (Packets.Count==PacketsCount)
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace Aristov.Common {
 	public enum MyExceptionType
 	{
 		PacketsCountNotMatch =0,
-		TaileNotConsistent=1
-
+		TaileNotConsistent=1,
+		PacketAlreadyContains =2
 	}
 }

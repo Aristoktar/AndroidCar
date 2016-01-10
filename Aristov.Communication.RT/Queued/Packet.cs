@@ -7,13 +7,12 @@ using Aristov.Common;
 
 namespace Aristov.Communication.RT.Queued
 {
-    public class Packet:IPacket
+    public class  Packet:IPacket
     {
 	    public static readonly int HeaderLength = 2*sizeof(int);
 	    public static readonly int DataLength;
 		public static readonly int TaileLength = sizeof(int);
 	    public byte[] Data { get;private set; }
-	    public int Id { get; private set; }
 	    public byte[] GetSendData()
 	    {
 			byte[] header = BitConverter.GetBytes ( FrameLength )
