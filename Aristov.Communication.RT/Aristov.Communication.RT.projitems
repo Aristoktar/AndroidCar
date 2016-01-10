@@ -18,7 +18,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Packet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PacketType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Queued\Frame.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Queued\IPacket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Queued\Packet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Queued\VideoClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Queued\VideoServer.cs" />

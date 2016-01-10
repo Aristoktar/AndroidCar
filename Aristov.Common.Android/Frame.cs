@@ -28,5 +28,12 @@ namespace Aristov.Common.Android {
 		{
 			return _bites;
 		}
+
+		public int PacketsCount { get; private set; }
+		public IDictionary<int, IPacket> Packets { get; private set; }
+		public bool TryAddPacket(IPacket packet)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

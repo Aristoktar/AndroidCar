@@ -33,11 +33,7 @@ namespace Aristov.Communication.RT
 		   return res;
 	   }
 
-	   public static byte[] CreateLogon()
-	   {
-
-
-	   }
+	
 
 	   public Packet(byte[] bytes, PacketType type)
 	   {

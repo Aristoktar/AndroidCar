@@ -41,7 +41,9 @@
     <Compile Include="IFrame.cs" />
     <Compile Include="IFrameConverter.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="IPacket.cs" />
     <Compile Include="LoggerFactory.cs" />
+    <Compile Include="MyException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

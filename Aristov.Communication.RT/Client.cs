@@ -71,15 +71,15 @@ namespace Aristov.Communication.RT
 			
 			var data  =new byte[length];
 		    stream.Read(data, 0, length);
-			if (NewFrameEventHandler != null)
-			{
-				NewFrameEventHandler(this, new NewFrameEventArgs()
-				{
-					FrameBytes = data,
-					Type = MediaType.Jpeg //Hardcode!=) for a while
+			//if (NewFrameEventHandler != null)
+			//{
+			//	NewFrameEventHandler(this, new NewFrameEventArgsOLd()
+			//	{
+			//		FrameBytes = data,
+			//		Type = MediaType.Jpeg //Hardcode!=) for a while
 
-				});
-			}
+			//	});
+			//}
 			if(!Stoped)
 				EnqueueImage(stream);
 			//images.Enqueue(data);

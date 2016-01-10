@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Aristov.Communication.RT
 {
-    public class NewFrameEventArgs:EventArgs
+    public class NewFrameEventArgsOLd:EventArgs
     {
 	    public byte[] FrameBytes { get; set; }
 
 	    public MediaType Type { get; set; }
     }
 
-	public delegate void NewFrameEvent ( object sender , NewFrameEventArgs e );
+	public delegate void NewFrameEvent ( object sender , Queued.NewFrameEventArgs e );
 }

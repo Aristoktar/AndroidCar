@@ -29,10 +29,10 @@ namespace Aristov.Communication.RT.Queued
 			_clientsSockets = new List<Socket> ();
 			_serverSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
 			_serverSocket.Bind(new IPEndPoint(IPAddress.Parse(endpoint), port));
-			_serverSocket.SendBufferSize = Packet.
-			_acceptThread = new Thread(AcceptCircle);
-			_sendThread =new Thread(Send);
-			_acceptThread.Start();
+		    _serverSocket.SendBufferSize = Packet.DataLength;
+			_acceptThread = new Thread ( AcceptCircle );
+			_sendThread = new Thread(Send);
+			_acceptThread.Start ();
 			_sendThread.Start();
 			Connected = true;
 			Log.Info("VideoServerCreated");
@@ -49,7 +49,7 @@ namespace Aristov.Communication.RT.Queued
 				    {
 					    if (clientsSocket.Connected)
 					    {
-						    clientsSocket.Send(packet.Data);
+						    clientsSocket.Send(packet.GetSendData());
 					    }
 					    else
 					    {

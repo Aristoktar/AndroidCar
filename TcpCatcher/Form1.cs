@@ -28,7 +28,7 @@ namespace TcpCatcher {
 		}
 
 		int countF = 0;
-		void _client_NewFrameEventHandler ( object sender , NewFrameEventArgs e ) {
+		void _client_NewFrameEventHandler ( object sender , NewFrameEventArgsOLd e ) {
 			//countF++;
 			Console.WriteLine("Recived {0} with hash {1},Length: {2}",e.Type,e.FrameBytes.GetHashCode(),e.FrameBytes.Length);
 			string file = Path.Combine(Environment.CurrentDirectory, "photos",string.Format("img{0}.jpeg",countF));
@@ -51,7 +51,7 @@ namespace TcpCatcher {
 		private void button1_Click(object sender, EventArgs e)
 		{
 			_client = new Client ( textBox1.Text , 8012 );
-			_client.NewFrameEventHandler += _client_NewFrameEventHandler;
+			//_client.NewFrameEventHandler += _client_NewFrameEventHandler;
 			//thread = new Thread(listen);
 			//thread.Start();
 			//timer = new Timer(100);
