@@ -11,7 +11,10 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Util;
+using Aristov.Common;
+using Aristov.Common.Android;
 using Aristov.Communication.RT;
+using Aristov.Communication.RT.Queued;
 using Java.IO;
 using Java.Lang;
 using Camera = Android.Hardware.Camera;
@@ -39,11 +42,16 @@ namespace Android {
 		Button ButtonStart;
 		Button ButtonStop;
 		EditText TextHost;
+
+		VideoServer _videoServer;
+		ILogger Logger;
 		protected override void OnCreate ( Bundle bundle ) {
 			base.OnCreate ( bundle );
 			SetContentView ( Resource.Layout.Main );
+			LoggerFactory.Setup ( typeof ( AndroidLogger ) );
+			Logger = LoggerFactory.Create();
 
-
+			
 
 			surfaceView = FindViewById<SurfaceView> ( Resource.Id.surfaceCamera );
 			surfaceHolder = surfaceView.Holder;
@@ -51,22 +59,20 @@ namespace Android {
 			ButtonStart = FindViewById<Button> ( Resource.Id.ButtonStart );
 			ButtonStop= FindViewById<Button> ( Resource.Id.ButtonStop );
 			TextHost = FindViewById<EditText> ( Resource.Id.TextHost );
-
-			ButtonStart.Click += ButtonStart_Click;
-
 			
-
+			ButtonStart.Click += ButtonStart_Click;
 		}
 
-		void ButtonStart_Click ( object sender , EventArgs e ) {
+		void ButtonStart_Click ( object sender , EventArgs e )
+		{
 			try
 			{
-				_server = new Server ( TextHost.Text );
-				_server.Start ();
+				var host = GetString ( Resource.String.InitHost ).Split ( ':' );
+				_videoServer = new VideoServer ( host[0] , int.Parse ( host[1] ) );
 			}
 			catch (Exception ex)
 			{
-				Log.Debug(LogTag, string.Format("Error: {0}",ex));
+				Logger.Error("Error: {0}", ex);
 			}
 			
 		}
@@ -83,7 +89,7 @@ namespace Android {
 			try {
 				_camera = Camera.Open();
 				_camera.SetDisplayOrientation(90);
-				Log.Debug(LogTag, "CameraOpend");
+				Logger.Debug("Camera opened");
 				_camera.SetPreviewDisplay(holder);
 				_camera.SetPreviewCallback(this);
 				_camera.StartPreview();
@@ -112,15 +118,10 @@ namespace Android {
 				{
 					if (countF%rate==0)
 					{
-						//TcpClient client = new TcpClient ( "aristov.me" , 123 );
-						//var stream = client.GetStream ();
 						Camera.Parameters parameters = camera.GetParameters();
 						Rect rect = new Rect(0, 0, parameters.PreviewSize.Width, parameters.PreviewSize.Height);
 						var jpegdata = ConvertYuvToJpeg(data, camera);
-						//stream.Write ( jpegdata , 0 , jpegdata.Length );
-						Log.Info(LogTag, "New frame sent:hash "+jpegdata.GetHashCode());
-						_server.NewFrame(jpegdata);
-						
+						_videoServer.NewFrame(jpegdata);
 					}
 					countF++;
 				}
@@ -128,15 +129,15 @@ namespace Android {
 			catch (Exception ex)
 			{
 
-				Log.Error(LogTag,string.Format("Error while sending frame: {0}", ex));
+				Logger.Error("Error while sending frame: {0}", ex);
 			}
 
 		}
-		private byte[] ConvertYuvToJpeg ( byte[] yuvData , Android.Hardware.Camera camera ) {
+		private byte[] ConvertYuvToJpeg ( byte[] vuvData , Android.Hardware.Camera camera ) {
 			var cameraParameters = camera.GetParameters ();
 			var width = cameraParameters.PreviewSize.Width;
 			var height = cameraParameters.PreviewSize.Height;
-			var yuv = new YuvImage ( yuvData , cameraParameters.PreviewFormat , width , height , null );
+			var yuv = new YuvImage ( vuvData , cameraParameters.PreviewFormat , width , height , null );
 			var ms = new MemoryStream ();
 			var quality = 1;   // adjust this as needed
 			yuv.CompressToJpeg ( new Rect ( 0 , 0 , width , height ) , quality , ms );
@@ -145,9 +146,8 @@ namespace Android {
 			return jpegData;
 		}
 
-		public static Bitmap bytesToBitmap ( byte[] imageBytes ) {
+		public static Bitmap BytesToBitmap ( byte[] imageBytes ) {
 			Bitmap bitmap = BitmapFactory.DecodeByteArray ( imageBytes , 0 , imageBytes.Length );
-
 			return bitmap;
 		}
 	}

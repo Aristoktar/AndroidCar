@@ -69,9 +69,6 @@
     <None Include="GettingStarted.Xamarin" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
-    <AndroidResource Include="Resources\layout\layout1.axml">
-      <SubType>AndroidResource</SubType>
-    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
@@ -88,6 +85,10 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Aristov.Common.Android\Aristov.Common.Android.csproj">
+      <Project>{e6e132aa-e2b7-4626-ad45-ed0847934f5f}</Project>
+      <Name>Aristov.Common.Android</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Aristov.Common\Aristov.Common.csproj">
       <Project>{C170BD34-D40E-4FFA-9F29-6E4F0614C6BF}</Project>
       <Name>Aristov.Common</Name>

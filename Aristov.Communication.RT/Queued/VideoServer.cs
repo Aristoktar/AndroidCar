@@ -66,6 +66,7 @@ namespace Aristov.Communication.RT.Queued
 
 	    public void NewFrame(byte[] frameData)
 	    {
+		    Log.Info("New frame: {0}", frameCounter);
 		    foreach (var packet in DataToList(frameData))
 		    {
 			    _dataQueue.Enqueue(packet);

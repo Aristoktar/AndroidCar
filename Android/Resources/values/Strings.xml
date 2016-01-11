@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="Start">Start!</string>
-  <string name="Stop">Stop</string>
+    <string name="Stop">Stop</string>
     <string name="ApplicationName">Android</string>
-    <string name="InitHost">192.168.0.110</string>
+    <string name="InitHost">192.168.0.110:9999</string>
   
   
 </resources>

@@ -26,6 +26,8 @@ namespace Android
 		
 		public static void UpdateIdValues()
 		{
+			global::Aristov.Common.Android.Resource.String.ApplicationName = global::Android.Resource.String.ApplicationName;
+			global::Aristov.Common.Android.Resource.String.Hello = global::Android.Resource.String.Hello;
 		}
 		
 		public partial class Attribute
@@ -92,10 +94,7 @@ namespace Android
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int layout1 = 2130903040;
-			
-			// aapt resource value: 0x7f030001
-			public const int Main = 2130903041;
+			public const int Main = 2130903040;
 			
 			static Layout()
 			{
@@ -110,17 +109,20 @@ namespace Android
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f040002
-			public const int ApplicationName = 2130968578;
-			
-			// aapt resource value: 0x7f040003
-			public const int InitHost = 2130968579;
+			// aapt resource value: 0x7f040001
+			public const int ApplicationName = 2130968577;
 			
 			// aapt resource value: 0x7f040000
-			public const int Start = 2130968576;
+			public const int Hello = 2130968576;
 			
-			// aapt resource value: 0x7f040001
-			public const int Stop = 2130968577;
+			// aapt resource value: 0x7f040004
+			public const int InitHost = 2130968580;
+			
+			// aapt resource value: 0x7f040002
+			public const int Start = 2130968578;
+			
+			// aapt resource value: 0x7f040003
+			public const int Stop = 2130968579;
 			
 			static String()
 			{
