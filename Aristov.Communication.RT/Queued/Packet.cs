@@ -10,7 +10,7 @@ namespace Aristov.Communication.RT.Queued
     public class  Packet:IPacket
     {
 	    public static readonly int HeaderLength = 2*sizeof(int);
-	    public static readonly int DataLength = 500;
+	    public static readonly int DataLength;
 		public static readonly int TaileLength = sizeof(int);
 	    public byte[] Data { get;private set; }
 	    public byte[] GetSendData()
@@ -35,9 +35,7 @@ namespace Aristov.Communication.RT.Queued
 		/// <param name="frameLength"></param>
 	    public Packet(byte[] data,int frameId,int frameLength)
 		{
-			//if ( data.Length != DataLength ) {
-			//	throw new ArgumentException ( "Data length not valid" );
-			//}
+		    if (data.Length != DataLength){ throw new ArgumentException("Data length not valid"); }
 			Data = data;
 			FrameId = frameId;
 			FrameLength = frameLength;

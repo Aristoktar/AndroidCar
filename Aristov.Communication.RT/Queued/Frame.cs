@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using Aristov.Common;
 
 namespace Aristov.Communication.RT.Queued {
@@ -23,12 +22,6 @@ namespace Aristov.Communication.RT.Queued {
 				throw new MyException {ExceptionType = MyExceptionType.PacketsCountNotMatch};
 			return _bites;
 		}
-
-		public MemoryStream GetStream()
-		{
-			return new MemoryStream(GetBytes());
-		}
-
 		public int PacketsCount { get;private set; }
 		public IDictionary<int, IPacket> Packets { get;private set; }
 		public bool TryAddPacket(IPacket packet)

@@ -22,18 +22,14 @@ namespace Aristov.Communication.RT.Queued
 	    Thread _acceptThread;
 	    Thread _sendThread;
 	    public bool Running { get; set; }
-	    private int _maxConnections = 10;
 
 	    public VideoServer ( string endpoint = "localhost" , int port = 8012 )
 	    {
-
-
 			_dataQueue = new ConcurrentQueue<IPacket>();
 			_clientsSockets = new List<Socket> ();
 			_serverSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
 			_serverSocket.Bind(new IPEndPoint(IPAddress.Parse(endpoint), port));
 		    _serverSocket.SendBufferSize = Packet.DataLength;
-			_serverSocket.Listen(_maxConnections);
 			_acceptThread = new Thread ( AcceptCircle );
 			_sendThread = new Thread(Send);
 			_acceptThread.Start ();
@@ -71,8 +67,7 @@ namespace Aristov.Communication.RT.Queued
 	    public void NewFrame(byte[] frameData)
 	    {
 		    Log.Info("New frame: {0}", frameCounter);
-		    var packets = DataToList(frameData);
-		    foreach (var packet in packets)
+		    foreach (var packet in DataToList(frameData))
 		    {
 			    _dataQueue.Enqueue(packet);
 		    }
@@ -90,8 +85,7 @@ namespace Aristov.Communication.RT.Queued
 		    int packetDataLength = Packet.DataLength;
 		    for (int i = 0; i < packetsCount; i++)
 		    {
-			    var bytes = data.Skip(bytesRead).Take(packetDataLength).ToArray();
-			    Packet packet = new Packet(bytes, frameCounter, dataLength);
+			    Packet packet = new Packet(data.Skip(bytesRead).Take(packetDataLength).ToArray(), frameCounter, dataLength);
 				packets.Add (packet);
 				bytesRead += packetDataLength;
 		    }
