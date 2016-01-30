@@ -20,8 +20,9 @@ namespace Aristov.Communication.RT.Queued
 	    public VideoClient(string host, int port)
 	    {
 		    _bufferSize = Packet.BufferSize;
-		    _socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-			_socket.Connect ( new IPEndPoint ( IPAddress.Parse ( host ) , port ) );
+		    _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			//_socket.AddressFamily = AddressFamily.InterNetwork;
+		    _socket.Connect(new IPEndPoint(IPAddress.Parse(host), port));
 		    _socket.ReceiveBufferSize = _bufferSize;
 			_receiveThread = new Thread(Recive);
 			_receiveThread.Start();
@@ -31,10 +32,11 @@ namespace Aristov.Communication.RT.Queued
 	    public void Recive()
 	    {
 		    Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>();
-		    while (_socket.Connected)
+		    while (true)
 		    {
 				byte[] buffer = new byte[_bufferSize];
 			    int bytesReceived = _socket.Receive(buffer);
+
 				//bytes received?
 				IPacket packet = new Packet(buffer,bytesReceived);
 			    IFrame frame;

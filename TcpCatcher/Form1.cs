@@ -13,18 +13,30 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Aristov.Common;
+using Aristov.Common.Windows;
 using Aristov.Communication.RT;
+using Aristov.Communication.RT.Queued;
 using Timer = System.Timers.Timer;
 
 namespace TcpCatcher {
 	public partial class Form1 : Form
 	{
 
-		Client _client;
-		public Form1(){
+		VideoClient _videoClient;
+		ILogger Logger;
 		
+		public Form1(){
+			LoggerFactory.Setup ( typeof ( DiagnostigsLogger ) );
+			Logger = LoggerFactory.Create ();
 			InitializeComponent();
 			
+		}
+
+		void _videoClient_NewFrame ( object sender , NewFrameEventArgs e )
+		{
+			Image img = Image.FromStream(e.Frame.GetStream());
+			pictureBox1.Image = img;
 		}
 
 		int countF = 0;
@@ -50,7 +62,8 @@ namespace TcpCatcher {
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			_client = new Client ( textBox1.Text , 8012 );
+			_videoClient = new VideoClient ( textBox1.Text , 9999 );
+			_videoClient.NewFrame += _videoClient_NewFrame;
 			//_client.NewFrameEventHandler += _client_NewFrameEventHandler;
 			//thread = new Thread(listen);
 			//thread.Start();
@@ -214,6 +227,20 @@ namespace TcpCatcher {
 			button1.Enabled = false;
 			video_thread = new Thread ( new ThreadStart ( startVideoConferencing ) );
 			video_thread.Start ();
+		}
+
+		VideoServer s;
+		private void Form1_Load ( object sender , EventArgs e ) {
+			Timer timer = new Timer(1000);
+			timer.Elapsed += timer_Elapsed;
+			VideoServer server = new VideoServer("127.0.0.1",9991);
+			
+		}
+
+		void timer_Elapsed ( object sender , System.Timers.ElapsedEventArgs e )
+		{
+			byte[] arr = new[] {new byte(), new byte()};
+			s.NewFrame(arr);
 		}
 	}
 }

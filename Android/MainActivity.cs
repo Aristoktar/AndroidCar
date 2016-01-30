@@ -45,13 +45,16 @@ namespace Android {
 
 		VideoServer _videoServer;
 		ILogger Logger;
+
+		public MainActivity()
+		{
+			LoggerFactory.Setup ( typeof ( AndroidLogger ) );
+			Logger = LoggerFactory.Create ();
+		}
+
 		protected override void OnCreate ( Bundle bundle ) {
 			base.OnCreate ( bundle );
 			SetContentView ( Resource.Layout.Main );
-			LoggerFactory.Setup ( typeof ( AndroidLogger ) );
-			Logger = LoggerFactory.Create();
-
-			
 
 			surfaceView = FindViewById<SurfaceView> ( Resource.Id.surfaceCamera );
 			surfaceHolder = surfaceView.Holder;
@@ -61,6 +64,7 @@ namespace Android {
 			TextHost = FindViewById<EditText> ( Resource.Id.TextHost );
 			
 			ButtonStart.Click += ButtonStart_Click;
+			
 		}
 
 		void ButtonStart_Click ( object sender , EventArgs e )
@@ -89,17 +93,15 @@ namespace Android {
 			try {
 				_camera = Camera.Open();
 				_camera.SetDisplayOrientation(90);
-				Logger.Debug("Camera opened");
 				_camera.SetPreviewDisplay(holder);
 				_camera.SetPreviewCallback(this);
 				_camera.StartPreview();
-
-				
+				Logger.Info("Camera opened");
 				//  camera.setDisplayOrientation(90);
 			}
 			catch ( Exception e )
 			{
-				Log.Error(LogTag,"camera open faild");
+				Logger.Error("camera open faild");
 			}
 		}
 
@@ -114,7 +116,7 @@ namespace Android {
 		{
 
 			try {
-				if (_server != null)
+				if (_videoServer != null)
 				{
 					if (countF%rate==0)
 					{
