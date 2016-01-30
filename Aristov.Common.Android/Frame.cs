@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -27,6 +28,11 @@ namespace Aristov.Common.Android {
 		public byte[] GetBytes()
 		{
 			return _bites;
+		}
+
+		public MemoryStream GetStream()
+		{
+			throw new NotImplementedException();
 		}
 
 		public int PacketsCount { get; private set; }
